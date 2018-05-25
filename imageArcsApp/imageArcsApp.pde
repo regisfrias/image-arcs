@@ -4,7 +4,7 @@ PImage img;
 
 float resolution = 360/2; // how many subdivisions the circle will have
 float angleIncr = 360/resolution; // reverse of the resolution gives size of increment for the arc sections
-int scale = 5; // how much bigger than the input the output will be
+int scale = 2; // how much bigger than the input the output will be
 
 void settings(){
   img = loadImage("img.jpg");
@@ -25,6 +25,8 @@ void draw(){
     drawArcs(width * widthVar);
   }
   
+  drawArc(true, true, 0, 360, width/2, width);
+  
   saveFrame("saved/" + year() + "-" + month() + "-" + day() + "-" + hour() + "-" + minute() + "-" + second() + "-circles.tif");
   exit();
 }
@@ -32,22 +34,30 @@ void draw(){
 void drawArcs(float smallRadius) {
   boolean isPlain = int(smallRadius) % 2 == 0; // every other arc is filled with solid colors
   int angleVariation = isPlain ? 10 : width/15;
-  float centerX = width/2;
-  float centerY = height/2;
 
   float arcAngle = random(20, 180); // size of the arc
   float bigRadius = smallRadius + random(2, angleVariation); // width of the arc
   float initAngle = random(360); // start arc somewhere around a circle
+  
+  drawArc(false, isPlain, initAngle, arcAngle, smallRadius, bigRadius);
 
-  color c = color(0);
+  if (smallRadius >= 0) { drawArcs(smallRadius - random(10, width/8)); }
+}
 
-  if (isPlain) {
-    int x = int(cos(0) * (bigRadius) + centerX);
-    int y = int(sin(0) * (bigRadius) + centerY);
-    c = img.get(x/scale, y/scale);
-  }
-
+void drawArc(boolean isFrame, boolean isPlain, float initAngle, float arcAngle, float smallRadius, float bigRadius){
+  float centerX = width/2;
+  float centerY = height/2;
+  
   beginShape(TRIANGLE_STRIP);
+  
+  color c = color(255);
+
+  if (isPlain && !isFrame) {
+    int x = int((cos(0) * (bigRadius) + centerX)/scale);
+    int y = int((sin(0) * (bigRadius) + centerY)/scale);
+    c = img.get(x, y);
+  }
+  
   for (float theta = initAngle; theta <= arcAngle + initAngle; theta += angleIncr) {
     float x1 = cos(radians(theta)) * (bigRadius) + centerX;
     float y1 = sin(radians(theta)) * (bigRadius) + centerY;
@@ -62,6 +72,4 @@ void drawArcs(float smallRadius) {
     vertex(x2, y2);
   }
   endShape();
-
-  if (smallRadius >= 0) { drawArcs(smallRadius - random(10, width/8)); }
 }
