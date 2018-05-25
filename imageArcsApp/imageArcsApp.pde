@@ -4,10 +4,14 @@ PImage img;
 
 float resolution = 360/2; // how many subdivisions the circle will have
 float angleIncr = 360/resolution; // reverse of the resolution gives size of increment for the arc sections
+int scale = 5; // how much bigger than the input the output will be
+
+void settings(){
+  img = loadImage("img.jpg");
+  size(img.width * scale, img.height * scale, P3D);
+}
 
 void setup() {
-  size(800, 800, P3D);
-  img = loadImage("img6.jpg");
   noStroke();
   noLoop();
 }
@@ -21,7 +25,7 @@ void draw(){
     drawArcs(width * widthVar);
   }
   
-  saveFrame("saved/" + year() + "-" + month() + "-" + day() + "-" + hour() + "-" + minute() + "-" + second() + "-circles.jpg");
+  saveFrame("saved/" + year() + "-" + month() + "-" + day() + "-" + hour() + "-" + minute() + "-" + second() + "-circles.tif");
   exit();
 }
 
@@ -40,7 +44,7 @@ void drawArcs(float smallRadius) {
   if (isPlain) {
     int x = int(cos(0) * (bigRadius) + centerX);
     int y = int(sin(0) * (bigRadius) + centerY);
-    c = img.get(x, y);
+    c = img.get(x/scale, y/scale);
   }
 
   beginShape(TRIANGLE_STRIP);
@@ -51,7 +55,7 @@ void drawArcs(float smallRadius) {
     float y2 = sin(radians(theta)) * (smallRadius) + centerY;
 
     // fill with pixel colors if is not plain arc
-    if (!isPlain) { c = img.get((int)x1, (int)y1); }
+    if (!isPlain) { c = img.get((int)x1/scale, (int)y1/scale); }
 
     fill(c);
     vertex(x1, y1);
