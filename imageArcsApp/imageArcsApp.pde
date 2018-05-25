@@ -4,7 +4,8 @@ PImage img;
 
 float resolution = 360/2; // how many subdivisions the circle will have
 float angleIncr = 360/resolution; // reverse of the resolution gives size of increment for the arc sections
-int scale = 2; // how much bigger than the input the output will be
+int scale = 1; // how much bigger than the input the output will be
+String extension = ".jpg"; // image extension
 
 void settings(){
   img = loadImage("img.jpg");
@@ -27,7 +28,7 @@ void draw(){
   
   drawArc(true, true, 0, 360, width/2, width);
   
-  saveFrame("saved/" + year() + "-" + month() + "-" + day() + "-" + hour() + "-" + minute() + "-" + second() + "-circles.tif");
+  saveFrame("saved/" + year() + "-" + month() + "-" + day() + "-" + hour() + "-" + minute() + "-" + second() + "-arcs" + extension);
   exit();
 }
 
